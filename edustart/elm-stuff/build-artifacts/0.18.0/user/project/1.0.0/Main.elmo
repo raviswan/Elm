@@ -1,0 +1,329 @@
+var _user$project$Main$displayCourse = function (course) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href('www.google.com'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(course.name),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$courseListBody = function (model) {
+	return A2(
+		_elm_lang$html$Html$ul,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$List$map,
+			_user$project$Main$displayCourse,
+			A2(
+				_elm_lang$core$List$sortBy,
+				function (_) {
+					return _.name;
+				},
+				model.courses)));
+};
+var _user$project$Main$courseListHeader = function (model) {
+	return A2(
+		_elm_lang$html$Html$header,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Course Name'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewFooter = A2(
+	_elm_lang$html$Html$footer,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$href('http://elm-lang.org'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Powered by Elm'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$viewHeader = function (title) {
+	return A2(
+		_elm_lang$html$Html$header,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(title),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$edit = F2(
+	function (model, id) {
+		var newCourses = A2(
+			_elm_lang$core$List$map,
+			function (course) {
+				return _elm_lang$core$Native_Utils.eq(course.id, id) ? _elm_lang$core$Native_Utils.update(
+					course,
+					{name: model.name}) : course;
+			},
+			model.courses);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{courses: newCourses, name: '', id: _elm_lang$core$Maybe$Nothing}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Main$deleteCourse = F2(
+	function (model, course) {
+		var filteredCourses = A2(
+			_elm_lang$core$List$filter,
+			function (c) {
+				return !_elm_lang$core$Native_Utils.eq(c.id, course.id);
+			},
+			model.courses);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{courses: filteredCourses}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: {
+		courses: {ctor: '[]'},
+		name: '',
+		id: _elm_lang$core$Maybe$Nothing
+	},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {courses: a, name: b, id: c};
+	});
+var _user$project$Main$Course = F2(
+	function (a, b) {
+		return {id: a, name: b};
+	});
+var _user$project$Main$add = function (model) {
+	var newCourse = A2(
+		_user$project$Main$Course,
+		_elm_lang$core$List$length(model.courses),
+		model.name);
+	var newCourses = {ctor: '::', _0: newCourse, _1: model.courses};
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{courses: newCourses, name: ''}),
+		_1: _elm_lang$core$Platform_Cmd$none
+	};
+};
+var _user$project$Main$save = function (model) {
+	var _p0 = model.id;
+	if (_p0.ctor === 'Nothing') {
+		return _user$project$Main$add(model);
+	} else {
+		return A2(_user$project$Main$edit, model, _p0._0);
+	}
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'Input':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{name: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Cancel':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{name: '', id: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Save':
+				return _elm_lang$core$String$isEmpty(model.name) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : _user$project$Main$save(model);
+			case 'EditCourse':
+				var _p2 = _p1._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							name: _p2.name,
+							id: _elm_lang$core$Maybe$Just(_p2.id)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return A2(_user$project$Main$deleteCourse, model, _p1._0);
+		}
+	});
+var _user$project$Main$Cancel = {ctor: 'Cancel'};
+var _user$project$Main$Save = {ctor: 'Save'};
+var _user$project$Main$DeleteCourse = function (a) {
+	return {ctor: 'DeleteCourse', _0: a};
+};
+var _user$project$Main$EditCourse = function (a) {
+	return {ctor: 'EditCourse', _0: a};
+};
+var _user$project$Main$Input = function (a) {
+	return {ctor: 'Input', _0: a};
+};
+var _user$project$Main$courseForm = function (model) {
+	return A2(
+		_elm_lang$html$Html$form,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Main$Save),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('text'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$value(model.name),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('Enter Course name'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$Input),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('submit'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Save'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('button'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Cancel),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Cancel'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$courseList = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$courseListHeader(model),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$courseForm(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$courseListBody(model),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$viewHeader('Instructor Dashboard'),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$courseList(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$viewFooter,
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{
+		init: _user$project$Main$init,
+		update: _user$project$Main$update,
+		subscriptions: function (_p3) {
+			return _elm_lang$core$Platform_Sub$none;
+		},
+		view: _user$project$Main$view
+	})();

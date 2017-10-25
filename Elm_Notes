@@ -1,0 +1,180 @@
+-------
+ELM
+------------
+
+Elm is a pure functional programming language. It means function store state. No global variables etc.
+elm-repl : get you to command prompt
+elm-reactor is to compile the code.
+
+
+-----COMPILING ELM CODE ----
+elm-make Main.elm --output=Main.js
+or
+elm-live Main.elm --open --debug --output=Main.js
+
+
+Model-Update-View paradigm
+-------------
+- It's  Mode -> Update -> View paradigm. Upon start, initModel is used by "View" to display the page.
+Any actions made on the page (such as click, mouse movement etc) is passed to the "Update" function. Update
+function modifies the existing state. View displays the page again with the updated state.
+
+VARIABLES
+-------------
+  start with small letter.
+  E.g. a = "abc"
+       a =  1
+  Capital letter are only used for Union Types as explained below.
+
+
+FUNCTION
+---------------
+
+  - No brackets used for functions in Elm. Only space. Don't use tab.
+  add: Int -> Int -> Int   (this is the function signature)
+  > add a b =  
+    a + b
+
+   > add 2 3 
+   >square a = a*a
+
+LAMBDA FUNCTION
+---------------
+ Remember anonymous functions are written as \ param1 param2 -> param1 * param2
+   E.g. funct = \ a b -> a + b
+       funct 2 3 returns 5
+
+PARTIAL FUNCTION/ 
+---------------
+    Remember partial function is to use the output of the function on itself.
+    e.g.
+    add a b = 
+      a + b
+    Now when you do:
+     add a b |> add c    (|> takes the input from left as the last argument)
+
+     It will return the result of a + b. Pass that output as first argument into "add" with second argument being c.
+
+     Take the example of String.repeat. Type this in elm repl. Enter only one argument at a time.
+     See the output. You'll see a new function with one less argument. Because a new function is created
+     with a function name and first argument. This function then takes another argument and returns another type
+
+     try this in elm-repl:
+
+        > String.repeat
+        <function> : Int -> String -> String
+        > fn = String.repeat 3
+        <function> : String -> String
+        > fn "abc"
+        "abcabcabc" : String
+
+     Every function in Elm is a function with one argument.
+
+- if Condn 
+	then "statements"
+	else "Statements"
+
+ - LIST
+ ---------------
+      l = [1,3,4] : have to be of same type
+      Operations on List
+      List.map square l   // This uses the square function on a list
+      List.sort list      // This sorts the list
+      List.reverse l      // This reverses the list
+
+ - TUPLE 
+ ---------------
+  > t  = (1,"abc")   : can  have any data type
+  > () empty tuple : used when you don't have anything to pass to a function expecting an argument
+
+ - RECORD
+ ---------------
+    > point = {x = 1, y=2}
+
+ 	  Element a can be accessed as:
+ 		   point.x 
+ 		   or
+ 	 	  .x point (look at it as a function where .x is the function that calls point)
+    > Updating a record: {point | x =  21}   :  a new record is created.
+
+    To pass a record to a function , you just have to specify curly braces with the field of the record. Any kinda record 
+    with that field 'x'would be passed through.
+  
+      check_quadrant {x} = x > 0
+
+
+- INFIX vs PREFIX functions
+---------------
+  	E.g. Infix function can be used anytime the function is named without alphanumeric naming convention
+  		(~=) str1 str2 = 
+    		String.left 1 str1 == String.left 1 str2
+
+    		The above function compares equality for first char of two input strings. This can be called in Infix as :
+    			"Ram"  ~=  "Ramama"   will return true
+    			 
+    			 or Prefix as :
+
+    			 (~=) "Ram" "Ramana"  will return true
+
+- UNION TYPE:
+---------------
+
+    type OtherAnswer = DontKnow | Perhaps | Undecided
+    type Answer = Yes | No | Other OtherAnswer
+    answer = No
+
+    Now, function definition becomes:
+     respond : Answer -> String
+      E.g. respond ans =
+            case ans of
+              Yes ->
+                  ..
+              No ->
+                ..
+              Other Perhaps ->
+                ..
+
+-  TYPE ALIAS : can be use to alias standard types as well as records.
+    type alias PlayerId = Int
+    type alias PlayerName = String
+
+    type alias Player =
+      { id : Int
+      , name : String
+      }
+
+    E.g. function signature would look like:
+    label: Player -> PlayerName
+
+    This can be called as follows:
+    label (Player 1 "Sam")
+
+- TYPE VARIABLE
+---------------
+    > type Answer a = Yes | No | Other a
+      Now a function signature can be defined as follows, where "a" takes the value of Int
+      respond : Answer Int -> String
+    > type Maybe a
+      = Nothing
+      | Just a
+
+- HTML TAGS
+---------------
+  Stored as follows:
+  <div></div>      would be      div [] []
+  <p class="ram">Wow</p> would be p [class "ram"] [text "Wow"]
+
+  But when you use it, the above  should be always be enclosed inside div[] or something
+
+- GULP 
+  is used to compile elm files into a .js file. In know-then example, that's bundle.js specifeid in gulpfile.js. Look for "elm make"
+
+
+
+
+
+  TROUBLESHOOTING
+  ---------------
+
+  npm update -g minimatch@3.0.2
+
